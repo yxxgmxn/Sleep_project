@@ -18,7 +18,7 @@ y_test = pd.read_csv('y_test.csv').values.ravel()
 
 # ✅ 모델 생성 및 학습
 print("🌲 Random Forest 모델 학습 중...")
-model = RandomForestRegressor(n_estimators=10, random_state=42)
+model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 # ✅ 예측
