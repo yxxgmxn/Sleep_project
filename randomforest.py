@@ -1,8 +1,8 @@
 # randomforest.py
 
-# 그래프 백엔드 설정 (GUI 환경에서 matplotlib 오류 방지용, 에러 발생 시만 사용)
+# 그래프 백엔드 설정 
 import matplotlib
-matplotlib.use('TkAgg')  # 문제가 없다면 이 줄은 생략 가능
+matplotlib.use('TkAgg')  
 
 import pandas as pd
 import numpy as np
