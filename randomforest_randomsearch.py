@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -26,8 +27,7 @@ random_search = RandomizedSearchCV(
     estimator=RandomForestRegressor(random_state=42),
     param_distributions=param_distributions,
     n_iter=30,
-    scoring='r2'
-    ,
+    scoring='r2',
     cv=5,
     verbose=1,
     n_jobs=-1,
@@ -61,5 +61,15 @@ plt.figure(figsize=(12, 6))
 plt.bar(range(len(indices)), importances[indices])
 plt.xticks(range(len(indices)), [feature_names[i] for i in indices], rotation=45, ha='right')
 plt.title("Top 20 Feature Importances (RandomizedSearch RF)")
+plt.tight_layout()
+plt.show()
+
+# ✅ 예측값 분포 시각화
+plt.figure(figsize=(8, 6))
+sns.histplot(y_pred, bins=100, kde=True)
+plt.title("Distribution of Predicted Sleep Quality Score")
+plt.xlabel("Predicted Score")
+plt.ylabel("Frequency")
+plt.grid(True)
 plt.tight_layout()
 plt.show()
