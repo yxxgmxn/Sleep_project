@@ -59,3 +59,13 @@ plt.xticks(range(len(indices)), [feature_names[i] for i in indices], rotation=45
 plt.title("Top 20 Feature Importances (Tuned RF)")
 plt.tight_layout()
 plt.show()
+
+# ✅ 예측값 vs 실제값 시각화
+plt.figure(figsize=(6, 6))
+plt.scatter(y_test, y_pred, alpha=0.6)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+plt.xlabel("Actual")
+plt.ylabel("Predicted")
+plt.title("Predicted vs Actual (GridSearchCV)")
+plt.tight_layout()
+plt.show()
