@@ -18,6 +18,11 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
+# sleep_quality_score 출력
+print('sleep_quality_score 최소값:', y_train.min())
+print('sleep_quality_score 최대값:', y_train.max())
+print(pd.Series(y_train).describe())
+
 # ✅ Optuna 목적 함수 (5-fold CV 적용)
 def objective(trial):
     params = {
@@ -47,7 +52,7 @@ study = optuna.create_study(
 )
 study.optimize(
     objective,
-    n_trials=100,        # 원하는 trial 수로 변경
+    n_trials=200,        # 원하는 trial 수로 변경
     n_jobs=12,            # 병렬 처리 수 
     callbacks=[print_every_10_trials]  # 콜백 함수 등록
 )
