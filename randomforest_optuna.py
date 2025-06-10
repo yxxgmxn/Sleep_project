@@ -52,7 +52,7 @@ study = optuna.create_study(
 )
 study.optimize(
     objective,
-    n_trials=100,
+    n_trials=200,
     n_jobs=12,
     callbacks=[print_every_10_trials]
 )
@@ -86,7 +86,7 @@ print("📄 예측 결과 저장 완료: rf_predictions.csv")
 # ✅ 변수 중요도 시각화
 importances = final_model.feature_importances_
 feature_names = X_train.columns
-indices = np.argsort(importances)[::-1][:20]
+indices = np.argsort(importances)[::-1][:10]
 
 plt.figure(figsize=(12, 6))
 plt.bar(range(len(indices)), importances[indices])

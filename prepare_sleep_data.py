@@ -23,41 +23,40 @@ def compute_sleep_quality_score(row):
     counts = row["sleep_counts"]
     onset_dev = row["sleep_onset_dev"]
     score = (0.35 * efficiency + 0.2 * length - 0.2 * counts - 0.25 * onset_dev)
-    return score * 100  # ⛔️ round 제거!
+    return score * 100
 
 # 👉 원시 점수 계산 후 정규화
 data['raw_score'] = data.apply(compute_sleep_quality_score, axis=1)
 min_score = data['raw_score'].min()
 max_score = data['raw_score'].max()
 data['sleep_quality_score'] = 100 * (data['raw_score'] - min_score) / (max_score - min_score)
-data['sleep_quality_score'] = data['sleep_quality_score'].round(2)  # 🎯 마지막에만 반올림
-
-# 👉 raw_score는 제거
-data = data.drop(columns=['raw_score'])
+data['sleep_quality_score'] = data['sleep_quality_score'].round(2)
+data.drop(columns=['raw_score'], inplace=True)
 
 print("\n📈 sleep_quality_score 통계:")
 print(data['sleep_quality_score'].describe())
 
-# 4. 원래 점수 구성요소 삭제
-data = data.drop([
-    'sleep_length',
-    'sleep_efficiency',
-    'sleep_onset_dev',
-    'sleep_counts'
-], axis=1)
+# 4. 학습에 사용하지 않을 컬럼 삭제 (팀원 기준)
+remove_cols = [
+    'sleep_length', 'sleep_efficiency', 'sleep_onset_dev', 'sleep_counts',
+    'sleep_offset_dev', 'late_sleep_offset',
+    'sleep_length_ndays_mean', 'sleep_length_ndays_stdev', 'sleep_length_ndays_gradient',
+    'sleep_efficiency_ndays_mean', 'sleep_efficiency_ndays_stdev', 'sleep_efficiency_ndays_gradient',
+    'sleep_onset_dev_ndays_mean', 'sleep_onset_dev_ndays_stdev', 'sleep_onset_dev_ndays_gradient',
+    'sleep_offset_dev_ndays_mean', 'sleep_offset_dev_ndays_stdev', 'sleep_offset_dev_ndays_gradient',
+    'sleep_counts_ndays_mean', 'sleep_counts_ndays_stdev', 'sleep_counts_ndays_gradient',
+    'late_sleep_offset_ndays_mean', 'late_sleep_offset_ndays_stdev', 'late_sleep_offset_ndays_gradient',
+]
+data = data.drop(columns=[col for col in remove_cols if col in data.columns])
 
 # 5. 피처/타깃 분리
 drop_cols = ['sleep_quality_score', 'score_level', 'patient_id', 'timestamp']
 drop_cols = [col for col in drop_cols if col in data.columns]
-
-features = data.drop(columns=drop_cols)
-target = data['sleep_quality_score']
+X = data.drop(columns=drop_cols)
+y = data['sleep_quality_score']
 
 # 6. 학습/테스트 분할
-random_seed = 42
-X_train, X_test, y_train, y_test = train_test_split(
-    features, target, test_size=0.2, random_state=random_seed
-)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 print(f"\n✅ 데이터 분할 완료: X_train={X_train.shape}, X_test={X_test.shape}")
 
